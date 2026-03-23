@@ -1,0 +1,11 @@
+{
+  "name": "@ravshansbox/pi-cost",
+  "version": "1.0.0",
+  "description": "Cost report extension for pi",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@mariozechner/pi-coding-agent": "workspace:*",
+    "@mariozechner/pi-tui": "workspace:*"
+  }
+}
