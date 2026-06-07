@@ -6,7 +6,7 @@
  * deleting provider data from sessions.
  *
  * Usage:
- *   /cost [days]  - Show cost report for last N days (default: 7)
+ *   /cost [days]  - Show cost report for last N days (default: 1)
  *
  * Controls:
  *   ←→ tabs       - Switch between week/month/all views
@@ -443,7 +443,7 @@ export default function (pi: ExtensionAPI) {
 				ctx.ui.notify("Cost report requires interactive mode", "error");
 				return;
 			}
-			const daysBack = parseInt(args || "7") || 7;
+			const daysBack = parseInt(args || "1") || 1;
 			await ctx.ui.custom((tui, theme, _kb, done) => {
 				return new CostComponent(tui, theme, () => done(undefined), daysBack);
 			});
