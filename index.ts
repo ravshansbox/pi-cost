@@ -275,6 +275,7 @@ class CostComponent {
 	private cursor = 0;
 	private currentTab = 0;
 	private tabs: { label: string; days: number | null }[] = [
+		{ label: "day", days: 1 },
 		{ label: "week", days: 7 },
 		{ label: "month", days: 30 },
 		{ label: "all", days: null },
