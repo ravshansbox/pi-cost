@@ -17,7 +17,7 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { visibleWidth, matchesKey, Key } from "@earendil-works/pi-tui";
+import { visibleWidth, truncateToWidth, matchesKey, Key } from "@earendil-works/pi-tui";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
@@ -360,9 +360,10 @@ class CostComponent {
 		const hLine = "─".repeat(totalW - 2);
 
 		const box = (content: string) => {
-			const contentW = visibleWidth(content);
+			const truncated = truncateToWidth(content, innerW);
+			const contentW = visibleWidth(truncated);
 			const pad = Math.max(0, innerW - contentW);
-			return dim("│ ") + content + " ".repeat(pad) + dim(" │");
+			return dim("│ ") + truncated + " ".repeat(pad) + dim(" │");
 		};
 
 		const lines: string[] = [];
@@ -422,7 +423,9 @@ class CostComponent {
 		}
 
 		lines.push(dim(`├${hLine}┤`));
-		lines.push(box(dim("←→ tabs  ↑↓ navigate  enter expand  backspace delete  esc close")));
+		const helpText = "←→ tabs  ↑↓ navigate  enter expand  backspace delete  esc close";
+		const truncatedHelp = truncateToWidth(helpText, innerW);
+		lines.push(box(dim(truncatedHelp)));
 		lines.push(dim(`╰${hLine}╯`));
 
 		return lines;
