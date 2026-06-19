@@ -103,20 +103,27 @@ async function scanSessionLogs(daysBack: number | null = 30): Promise<ProviderCo
 		cutoffDate.setTime(0);
 	}
 
-	if (!fs.existsSync(sessionsDir)) {
+	let sessionEntries: fs.Dirent[];
+	try {
+		sessionEntries = await fs.promises.readdir(sessionsDir, { withFileTypes: true });
+	} catch {
 		return [];
 	}
 
-	const sessionDirs = fs
-		.readdirSync(sessionsDir, { withFileTypes: true })
+	const sessionDirs = sessionEntries
 		.filter((d) => d.isDirectory())
 		.map((d) => path.join(sessionsDir, d.name));
 
 	for (const dir of sessionDirs) {
-		const files = fs
-			.readdirSync(dir)
-			.filter((f) => f.endsWith(".jsonl"))
-			.map((f) => path.join(dir, f));
+		let dirEntries: fs.Dirent[];
+		try {
+			dirEntries = await fs.promises.readdir(dir, { withFileTypes: true });
+		} catch {
+			continue;
+		}
+		const files = dirEntries
+			.filter((f) => f.isFile() && f.name.endsWith(".jsonl"))
+			.map((f) => path.join(dir, f.name));
 
 		for (const file of files) {
 			await scanSessionFile(file, cutoffDate, providerCosts);
@@ -217,18 +224,27 @@ async function scanSessionFile(
 
 async function deleteProviderFromSessions(provider: string): Promise<void> {
 	const sessionsDir = path.join(os.homedir(), ".pi", "agent", "sessions");
-	if (!fs.existsSync(sessionsDir)) return;
+	let sessionEntries: fs.Dirent[];
+	try {
+		sessionEntries = await fs.promises.readdir(sessionsDir, { withFileTypes: true });
+	} catch {
+		return;
+	}
 
-	const sessionDirs = fs
-		.readdirSync(sessionsDir, { withFileTypes: true })
+	const sessionDirs = sessionEntries
 		.filter((d) => d.isDirectory())
 		.map((d) => path.join(sessionsDir, d.name));
 
 	for (const dir of sessionDirs) {
-		const files = fs
-			.readdirSync(dir)
-			.filter((f) => f.endsWith(".jsonl"))
-			.map((f) => path.join(dir, f));
+		let dirEntries: fs.Dirent[];
+		try {
+			dirEntries = await fs.promises.readdir(dir, { withFileTypes: true });
+		} catch {
+			continue;
+		}
+		const files = dirEntries
+			.filter((f) => f.isFile() && f.name.endsWith(".jsonl"))
+			.map((f) => path.join(dir, f.name));
 
 		for (const file of files) {
 			const fileStream = fs.createReadStream(file);
