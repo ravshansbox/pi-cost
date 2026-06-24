@@ -6,7 +6,7 @@
  * deleting provider data from sessions.
  *
  * Usage:
- *   /cost [days]  - Show cost report for last N days (default: 1)
+ *   /cost         - Show cost report with day/week/month/all tabs
  *
  * Controls:
  *   ←→ tabs       - Switch between week/month/all views
@@ -251,14 +251,28 @@ async function deleteProviderFromSessions(provider: string): Promise<void> {
 			const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 			const kept: string[] = [];
 			let modified = false;
+			let selectedProvider: string | undefined;
+			let selectedModel: string | undefined;
 
 			for await (const line of rl) {
 				if (!line.trim()) continue;
 				try {
 					const entry = JSON.parse(line);
+					if (entry.type === "model_change") {
+						selectedProvider = entry.provider || selectedProvider;
+						selectedModel = entry.modelId || selectedModel;
+						kept.push(line);
+						continue;
+					}
 					if (entry.type === "message" && entry.message?.role === "assistant") {
-						const msgProvider = entry.message.provider || "unknown";
-						if (msgProvider === provider) {
+						const model = entry.message.model || "unknown";
+						const effectiveProvider = getEffectiveProvider(
+							entry.message.provider || "unknown",
+							selectedProvider,
+							model,
+							selectedModel,
+						);
+						if (effectiveProvider === provider) {
 							modified = true;
 							continue;
 						}
