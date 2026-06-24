@@ -2,13 +2,26 @@
   "name": "@ravshansbox/pi-cost",
   "version": "1.0.0",
   "description": "Cost report extension for pi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravshansbox/pi-cost.git"
+  },
+  "keywords": [
+    "pi",
+    "extension"
+  ],
+  "files": [
+    "index.ts",
+    "LICENSE"
+  ],
   "type": "module",
   "pi": {
     "extensions": [
       "./index.ts"
     ]
   },
-  "dependencies": {
+  "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "@earendil-works/pi-tui": "*"
   },
@@ -16,6 +29,7 @@
     "typescript": "^6.0.3"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "typecheck": "tsc --noEmit"
   }
 }
