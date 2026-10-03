@@ -18,8 +18,5 @@ For example, run `/cost`, inspect the `week` tab for provider totals, and press 
 
 ```bash
 npm install
-npm test
-npm run typecheck
+npm run check
 ```
-
-Tests run with Node's built-in test runner.
