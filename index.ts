@@ -16,7 +16,7 @@
  *   esc           - Close
  */
 
-import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
+import type { ExtensionAPI, Theme } from '@earendil-works/pi-coding-agent';
 import { visibleWidth, truncateToWidth, matchesKey, Key } from '@earendil-works/pi-tui';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -305,7 +305,7 @@ class CostComponent {
   private costs: ProviderCost[] = [];
   private loading = true;
   private tui: { requestRender: () => void };
-  private theme: any;
+  private theme: Theme;
   private onClose: () => void;
   private expanded: string | null = null;
   private cursor = 0;
@@ -319,7 +319,7 @@ class CostComponent {
 
   constructor(
     tui: { requestRender: () => void },
-    theme: any,
+    theme: Theme,
     onClose: () => void,
     daysBack: number,
   ) {
