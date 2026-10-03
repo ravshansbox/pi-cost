@@ -4,10 +4,8 @@ Cost report extension for pi.
 
 ## Install
 
-```json
-{
-  "extensions": ["github:ravshansbox/pi-cost"]
-}
+```bash
+pi install git:github.com/ravshansbox/pi-cost
 ```
 
 ## Usage
