@@ -17,12 +17,7 @@
  */
 
 import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
-import {
-  visibleWidth,
-  truncateToWidth,
-  matchesKey,
-  Key,
-} from '@earendil-works/pi-tui';
+import { visibleWidth, truncateToWidth, matchesKey, Key } from '@earendil-works/pi-tui';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
@@ -89,8 +84,7 @@ function getEffectiveProvider(
   if (loggedProvider === selectedProvider) return loggedProvider;
   const baseProvider = MULTI_PROVIDER_BASES[selectedProvider];
   if (!baseProvider || loggedProvider !== baseProvider) return loggedProvider;
-  if (selectedModel && loggedModel && selectedModel !== loggedModel)
-    return loggedProvider;
+  if (selectedModel && loggedModel && selectedModel !== loggedModel) return loggedProvider;
   return selectedProvider;
 }
 
@@ -98,9 +92,7 @@ function getEffectiveProvider(
 // Session Log Scanning
 // =============================================================================
 
-async function scanSessionLogs(
-  daysBack: number | null = 30,
-): Promise<ProviderCost[]> {
+async function scanSessionLogs(daysBack: number | null = 30): Promise<ProviderCost[]> {
   const sessionsDir = path.join(os.homedir(), '.pi', 'agent', 'sessions');
   const providerCosts = new Map<string, ProviderCost>();
 
@@ -140,9 +132,7 @@ async function scanSessionLogs(
     }
   }
 
-  return Array.from(providerCosts.values()).sort(
-    (a, b) => b.totalCost - a.totalCost,
-  );
+  return Array.from(providerCosts.values()).sort((a, b) => b.totalCost - a.totalCost);
 }
 
 async function scanSessionFile(
@@ -353,8 +343,7 @@ class CostComponent {
       this.onClose();
     } else if (matchesKey(data, Key.left)) {
       if (this.tabs.length > 1) {
-        this.currentTab =
-          (this.currentTab - 1 + this.tabs.length) % this.tabs.length;
+        this.currentTab = (this.currentTab - 1 + this.tabs.length) % this.tabs.length;
         this.load();
       }
     } else if (matchesKey(data, Key.right)) {
@@ -455,11 +444,8 @@ class CostComponent {
             .slice(0, 3);
 
           for (const [model, cost] of sortedModels) {
-            const shortModel =
-              model.length > 25 ? model.substring(0, 22) + '...' : model;
-            lines.push(
-              box(dim(`    ${shortModel.toLowerCase()}: $${cost.toFixed(4)}`)),
-            );
+            const shortModel = model.length > 25 ? model.substring(0, 22) + '...' : model;
+            lines.push(box(dim(`    ${shortModel.toLowerCase()}: $${cost.toFixed(4)}`)));
           }
         }
         idx++;
@@ -467,14 +453,11 @@ class CostComponent {
 
       lines.push(dim(`├${hLine}┤`));
       const totalColor = grandTotal > 10 ? warning : success;
-      lines.push(
-        box(`${bold('total:')} ${totalColor(`$${grandTotal.toFixed(4)}`)}`),
-      );
+      lines.push(box(`${bold('total:')} ${totalColor(`$${grandTotal.toFixed(4)}`)}`));
     }
 
     lines.push(dim(`├${hLine}┤`));
-    const helpText =
-      '←→ tabs  ↑↓ navigate  enter expand  backspace delete  esc close';
+    const helpText = '←→ tabs  ↑↓ navigate  enter expand  backspace delete  esc close';
     const truncatedHelp = truncateToWidth(helpText, innerW);
     lines.push(box(dim(truncatedHelp)));
     lines.push(dim(`╰${hLine}╯`));
