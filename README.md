@@ -5,7 +5,7 @@ Cost report extension for pi.
 ## Install
 
 ```bash
-pi install git:github.com/ravshansbox/pi-cost
+pi install npm:@ravshansbox/pi-cost
 ```
 
 ## Usage
