@@ -476,7 +476,7 @@ export default function (pi: ExtensionAPI) {
     description: 'Show cost report from session logs',
     handler: async (args, ctx) => {
       if (!ctx.hasUI) {
-        ctx.ui.notify('Cost report requires interactive mode', 'error');
+        ctx.ui.notify('/cost requires interactive mode', 'error');
         return;
       }
       const daysBack = parseInt(args || '1') || 1;
