@@ -16,11 +16,10 @@
  *   esc           - Close
  */
 
-import type { ExtensionAPI, Theme } from '@earendil-works/pi-coding-agent';
+import { getAgentDir, type ExtensionAPI, type Theme } from '@earendil-works/pi-coding-agent';
 import { visibleWidth, truncateToWidth, matchesKey, Key } from '@earendil-works/pi-tui';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import * as os from 'node:os';
 import * as readline from 'node:readline';
 
 // =============================================================================
@@ -93,7 +92,7 @@ function getEffectiveProvider(
 // =============================================================================
 
 async function scanSessionLogs(daysBack: number | null = 30): Promise<ProviderCost[]> {
-  const sessionsDir = path.join(os.homedir(), '.pi', 'agent', 'sessions');
+  const sessionsDir = path.join(getAgentDir(), 'sessions');
   const providerCosts = new Map<string, ProviderCost>();
 
   const cutoffDate = new Date();
@@ -225,7 +224,7 @@ async function scanSessionFile(
 // =============================================================================
 
 async function deleteProviderFromSessions(provider: string): Promise<void> {
-  const sessionsDir = path.join(os.homedir(), '.pi', 'agent', 'sessions');
+  const sessionsDir = path.join(getAgentDir(), 'sessions');
   let sessionEntries: fs.Dirent[];
   try {
     sessionEntries = await fs.promises.readdir(sessionsDir, {
