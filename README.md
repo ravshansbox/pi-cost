@@ -8,6 +8,8 @@ Cost report extension for pi.
 pi install npm:@ravshansbox/pi-cost
 ```
 
+Add `-l` to install it in project settings.
+
 ## Usage
 
 Pi loads the command from `./index.ts`. Run `/cost` to open the cost report UI above the editor, then use the tabs to switch between day, week, month, and all views.
