@@ -1,30 +1,8 @@
-/**
- * Cost Report Extension
- *
- * Displays AI provider cost statistics from session logs.
- * Supports filtering by time range (week, month, all time) and allows
- * deleting provider data from sessions.
- *
- * Usage:
- *   /cost         - Show cost report with day/week/month/all tabs
- *
- * Controls:
- *   ←→ tabs       - Switch between week/month/all views
- *   ↑↓            - Navigate providers
- *   enter         - Expand/collapse provider details
- *   backspace     - Delete selected provider from sessions
- *   esc           - Close
- */
-
 import { getAgentDir, type ExtensionAPI, type Theme } from '@earendil-works/pi-coding-agent';
 import { visibleWidth, truncateToWidth, matchesKey, Key } from '@earendil-works/pi-tui';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as readline from 'node:readline';
-
-// =============================================================================
-// Types
-// =============================================================================
 
 interface DailyCost {
   date: string;
@@ -45,10 +23,6 @@ interface ProviderCost {
   models: Map<string, number>;
 }
 
-// =============================================================================
-// Constants
-// =============================================================================
-
 const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   anthropic: 'Claude',
   'anthropic-multi': 'Claude Multi',
@@ -64,10 +38,6 @@ const MULTI_PROVIDER_BASES: Record<string, string> = {
   'anthropic-multi': 'anthropic',
   'openai-codex-multi': 'openai-codex',
 };
-
-// =============================================================================
-// Helper Functions
-// =============================================================================
 
 function formatProviderName(provider: string): string {
   return PROVIDER_DISPLAY_NAMES[provider] || provider;
@@ -86,10 +56,6 @@ function getEffectiveProvider(
   if (selectedModel && loggedModel && selectedModel !== loggedModel) return loggedProvider;
   return selectedProvider;
 }
-
-// =============================================================================
-// Session Log Scanning
-// =============================================================================
 
 async function scanSessionLogs(daysBack: number | null = 30): Promise<ProviderCost[]> {
   const sessionsDir = path.join(getAgentDir(), 'sessions');
@@ -219,10 +185,6 @@ async function scanSessionFile(
   }
 }
 
-// =============================================================================
-// Provider Deletion
-// =============================================================================
-
 async function deleteProviderFromSessions(provider: string): Promise<void> {
   const sessionsDir = path.join(getAgentDir(), 'sessions');
   let sessionEntries: fs.Dirent[];
@@ -295,10 +257,6 @@ async function deleteProviderFromSessions(provider: string): Promise<void> {
     }
   }
 }
-
-// =============================================================================
-// UI Component
-// =============================================================================
 
 class CostComponent {
   private costs: ProviderCost[] = [];
@@ -466,10 +424,6 @@ class CostComponent {
 
   dispose(): void {}
 }
-
-// =============================================================================
-// Extension Entry Point
-// =============================================================================
 
 export default function (pi: ExtensionAPI) {
   pi.registerCommand('cost', {
