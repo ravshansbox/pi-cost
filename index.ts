@@ -93,7 +93,7 @@ async function scanSessionLogs(daysBack: number | null = 30): Promise<ProviderCo
       .map((f) => path.join(dir, f.name));
 
     for (const file of files) {
-      await scanSessionFile(file, cutoffDate, providerCosts);
+      await scanSessionFile(file, cutoffDate, providerCosts).catch(() => {});
     }
   }
 

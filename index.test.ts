@@ -123,3 +123,13 @@ test('shows the latest tab when an earlier scan finishes last', async (t) => {
   await settle(400);
   assert.doesNotMatch(screen(cost), /openai/);
 });
+
+test('skips session files it cannot read', async () => {
+  const sessionDir = setupAgentDir({
+    'a.jsonl': [assistant('anthropic', 1)],
+    'b.jsonl': [assistant('openai', 2)],
+  });
+  fs.chmodSync(path.join(sessionDir, 'a.jsonl'), 0o000);
+  const cost = await openCost();
+  assert.match(screen(cost), /openai\* \$2\.0000/);
+});
