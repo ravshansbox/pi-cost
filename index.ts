@@ -291,6 +291,7 @@ class CostComponent {
   private async load() {
     const days = this.tabs[this.currentTab]?.days ?? null;
     this.costs = await scanSessionLogs(days);
+    this.cursor = Math.min(this.cursor, Math.max(0, this.costs.length - 1));
     this.loading = false;
     this.tui.requestRender();
   }

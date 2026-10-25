@@ -88,3 +88,20 @@ test('shows provider totals for the selected tab', async () => {
   await settle();
   assert.match(screen(cost), /openai\* \$2\.0000/);
 });
+
+test('keeps the cursor on a visible provider after switching tabs', async () => {
+  setupAgentDir({
+    'a.jsonl': [
+      assistant('anthropic', 1),
+      assistant('anthropic', 1, 10),
+      assistant('openai', 5, 10),
+    ],
+  });
+  const cost = await openCost();
+  cost.handleInput(KEYS.left);
+  await settle();
+  cost.handleInput(KEYS.down);
+  cost.handleInput(KEYS.right);
+  await settle();
+  assert.match(screen(cost), /> \*+claude/);
+});
