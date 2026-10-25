@@ -24,11 +24,12 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "node --test index.test.ts",
     "lint": "oxlint --deny-warnings",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "check": "npm run typecheck && npm run lint && npm run format:check"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
