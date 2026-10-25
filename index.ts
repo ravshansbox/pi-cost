@@ -267,6 +267,7 @@ class CostComponent {
   private expanded: string | null = null;
   private cursor = 0;
   private currentTab = 0;
+  private loadId = 0;
   private tabs: { label: string; days: number | null }[] = [
     { label: 'day', days: 1 },
     { label: 'week', days: 7 },
@@ -290,7 +291,10 @@ class CostComponent {
 
   private async load() {
     const days = this.tabs[this.currentTab]?.days ?? null;
-    this.costs = await scanSessionLogs(days);
+    const id = ++this.loadId;
+    const costs = await scanSessionLogs(days);
+    if (id !== this.loadId) return;
+    this.costs = costs;
     this.cursor = Math.min(this.cursor, Math.max(0, this.costs.length - 1));
     this.loading = false;
     this.tui.requestRender();

@@ -105,3 +105,21 @@ test('keeps the cursor on a visible provider after switching tabs', async () => 
   await settle();
   assert.match(screen(cost), /> \*+claude/);
 });
+
+test('shows the latest tab when an earlier scan finishes last', async (t) => {
+  setupAgentDir({ 'a.jsonl': [assistant('anthropic', 1), assistant('openai', 5, 10)] });
+  const cost = await openCost();
+  const readdir = fs.promises.readdir;
+  let delayed = false;
+  t.mock.method(fs.promises, 'readdir', async (...args: unknown[]) => {
+    if (!delayed) {
+      delayed = true;
+      await settle(200);
+    }
+    return (readdir as (...a: unknown[]) => unknown)(...args);
+  });
+  cost.handleInput(KEYS.left);
+  cost.handleInput(KEYS.right);
+  await settle(400);
+  assert.doesNotMatch(screen(cost), /openai/);
+});
