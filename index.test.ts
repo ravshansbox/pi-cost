@@ -133,3 +133,17 @@ test('skips session files it cannot read', async () => {
   const cost = await openCost();
   assert.match(screen(cost), /openai\* \$2\.0000/);
 });
+
+test('keeps a provider listed when deleting it fails', async () => {
+  const sessionDir = setupAgentDir({ 'a.jsonl': [assistant('anthropic', 1)] });
+  fs.chmodSync(path.join(sessionDir, 'a.jsonl'), 0o444);
+  const rejections: unknown[] = [];
+  const onRejection = (reason: unknown) => rejections.push(reason);
+  process.on('unhandledRejection', onRejection);
+  const cost = await openCost();
+  cost.handleInput(KEYS.backspace);
+  await settle();
+  process.off('unhandledRejection', onRejection);
+  assert.deepEqual(rejections, []);
+  assert.match(screen(cost), /claude\* \$1\.0000/);
+});

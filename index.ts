@@ -337,7 +337,7 @@ class CostComponent {
           this.cursor = Math.max(0, this.costs.length - 1);
         }
         this.tui.requestRender();
-        deleteProviderFromSessions(pc.provider);
+        deleteProviderFromSessions(pc.provider).catch(() => this.load());
       }
     }
   }
