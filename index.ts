@@ -434,7 +434,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand('cost', {
     description: 'Show cost report from session logs',
     handler: async (args, ctx) => {
-      if (!ctx.hasUI) {
+      if (ctx.mode !== 'tui') {
         ctx.ui.notify('/cost requires interactive mode', 'error');
         return;
       }

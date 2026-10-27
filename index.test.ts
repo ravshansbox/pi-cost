@@ -55,6 +55,7 @@ async function openCost(args = ''): Promise<Component> {
   let component: Component | undefined;
   const theme = { fg: (_c: string, s: string) => s, bold: (s: string) => `*${s}*` };
   const ctx = {
+    mode: 'tui',
     hasUI: true,
     ui: {
       notify: () => {},
@@ -76,6 +77,29 @@ function settle(ms = 100): Promise<void> {
 function screen(component: Component): string {
   return component.render(80).join('\n');
 }
+
+test('asks for the TUI in RPC mode instead of opening the report', async () => {
+  let handler: ((args: string, ctx: unknown) => Promise<void>) | undefined;
+  extension({
+    registerCommand: (_name: string, opts: { handler: typeof handler }) => {
+      handler = opts.handler;
+    },
+  } as never);
+  const notifications: string[] = [];
+  let opened = false;
+  await handler!('', {
+    mode: 'rpc',
+    hasUI: true,
+    ui: {
+      notify: (message: string) => notifications.push(message),
+      custom: async () => {
+        opened = true;
+      },
+    },
+  });
+  assert.equal(opened, false);
+  assert.deepEqual(notifications, ['/cost requires interactive mode']);
+});
 
 test('shows provider totals for the selected tab', async () => {
   setupAgentDir({
